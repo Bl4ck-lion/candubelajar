@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Form Tryout TKA</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(145deg, #fff8dc, #fceabb);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 800px;
+      background: rgba(255, 255, 255, 0.25);
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border-radius: 20px;
+      padding: 30px;
+    }
+
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-row {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .form-group {
+      flex: 1 1 45%;
+      display: flex;
+      flex-direction: column;
+      margin-top: 10px;
+    }
+
+    label {
+      margin-bottom: 5px;
+      font-weight: 600;
+    }
+
+    input, select {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      font-size: 1em;
+    }
+
+    .buttons {
+      margin-top: 20px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 12px;
+      background-color: #ffcc00;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #ffc107;
+    }
+
+    .step { display: none; }
+    .step.active { display: block; }
+
+    .final {
+      text-align: center;
+    }
+
+    @media (max-width: 600px) {
+      .form-row {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="step active" id="step1">
+      <h2>Form Pendaftaran Tryout TKA</h2>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="nama">Nama *</label>
+          <input type="text" id="nama" required>
+        </div>
+        <div class="form-group">
+          <label for="email">Email *</label>
+          <input type="email" id="email" required>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="wa">No Whatsapp *</label>
+          <input type="text" id="wa" required>
+        </div>
+        <div class="form-group">
+          <label for="sekolah">Asal Sekolah *</label>
+          <input type="text" id="sekolah" required>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="univ">Univ Tujuan *</label>
+          <input type="text" id="univ" required>
+        </div>
+      </div>
+      <div class="buttons">
+        <div></div>
+        <button type="button" onclick="nextStep()">Next</button>
+      </div>
+    </div>
+
+    <div class="step" id="step2">
+      <h2>Syarat Pendaftaran & Mapel TKA</h2>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="bukti_follow">Bukti Follow IG *</label>
+          <input type="file" id="bukti_follow" accept="image/*" required>
+        </div>
+        <div class="form-group">
+          <label for="bukti_grup">Share ke 5 Grup *</label>
+          <input type="file" id="bukti_grup" accept="image/*" required>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="bukti_story">Share ke Story IG/WA *</label>
+          <input type="file" id="bukti_story" accept="image/*" required>
+        </div>
+      </div>
+
+      <fieldset>
+        <legend>Pilih 2 Mapel *</legend>
+        <div class="form-row">
+          <label><input type="checkbox" name="mapel" value="FISIKA"> FISIKA</label>
+          <label><input type="checkbox" name="mapel" value="KIMIA"> KIMIA</label>
+          <label><input type="checkbox" name="mapel" value="BIOLOGI"> BIOLOGI</label>
+          <label><input type="checkbox" name="mapel" value="MATLAN"> MATLAN</label>
+          <label><input type="checkbox" name="mapel" value="EKONOMI"> EKONOMI</label>
+          <label><input type="checkbox" name="mapel" value="GEOGRAFI"> GEOGRAFI</label>
+          <label><input type="checkbox" name="mapel" value="SOSIOLOGI"> SOSIOLOGI</label>
+          <label><input type="checkbox" name="mapel" value="SEJARAH"> SEJARAH</label>
+          <label><input type="checkbox" name="mapel" value="PKN"> PKN</label>
+        </div>
+      </fieldset>
+
+      <div class="buttons">
+        <button type="button" onclick="backStep()">Back</button>
+        <button type="button" onclick="submitForm()">Submit</button>
+      </div>
+    </div>
+
+    <div class="step final" id="final">
+      <h2>Terima kasih sudah mendaftar!</h2>
+      <p>Silakan catat akun Tryout-mu:</p>
+      <p>Username: <span id="uname"></span></p>
+      <p>Password: <span id="pass"></span></p>
+      <p>Untuk pertanyaan hubungi CP WA: +62 878-7413-8999</p>
+    </div>
+  </div>
+
+  <script>
+    const step1 = document.getElementById('step1');
+    const step2 = document.getElementById('step2');
+    const final = document.getElementById('final');
+
+    function nextStep() {
+      const fields = ['nama', 'email', 'wa', 'sekolah', 'univ'];
+      for (let field of fields) {
+        const el = document.getElementById(field);
+        if (!el.value.trim()) {
+          alert(`Harap isi kolom ${field}`);
+          el.focus();
+          return;
+        }
+      }
+      step1.classList.remove('active');
+      step2.classList.add('active');
+    }
+
+    function backStep() {
+      step2.classList.remove('active');
+      step1.classList.add('active');
+    }
+
+    async function submitForm() {
+      const file_follow = document.getElementById('bukti_follow').files[0];
+      const file_grup = document.getElementById('bukti_grup').files[0];
+      const file_story = document.getElementById('bukti_story').files[0];
+
+      if (!file_follow || !file_grup || !file_story) {
+        alert("Semua bukti harus diunggah");
+        return;
+      }
+
+      const mapels = document.querySelectorAll('input[name="mapel"]:checked');
+      if (mapels.length !== 2) {
+        alert("Pilih tepat 2 mapel");
+        return;
+      }
+
+      const toBase64 = file => new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result.split(',')[1]);
+        reader.onerror = err => reject(err);
+        reader.readAsDataURL(file);
+      });
+
+      const data = {
+        nama: document.getElementById('nama').value,
+        email: document.getElementById('email').value,
+        wa: document.getElementById('wa').value,
+        sekolah: document.getElementById('sekolah').value,
+        univ: document.getElementById('univ').value,
+        bukti_follow: await toBase64(file_follow),
+        bukti_grup: await toBase64(file_grup),
+        bukti_story: await toBase64(file_story),
+        mapel: JSON.stringify(Array.from(mapels).map(m => m.value))
+      };
+
+      const res = await fetch("https://script.google.com/macros/s/AKfycbwDHQrOTor_pcGVvxItSHJH0MYReAextkbHUb7Q9dBTzdEQfVbD4SJ6Q0cJxlFdEbou/exec", {
+        method: 'POST',
+        body: new URLSearchParams(data)
+      });
+      const result = await res.json();
+      if (result.status === "success") {
+        document.getElementById('uname').innerText = result.uname;
+        document.getElementById('pass').innerText = result.pass;
+        step2.classList.remove('active');
+        final.classList.add('active');
+      } else {
+        alert("Gagal: " + result.message);
+      }
+    }
+  </script>
+</body>
+</html>
